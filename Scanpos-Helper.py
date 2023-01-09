@@ -10,10 +10,41 @@ try:  # Windows 8.1 and later
 except Exception as e:
     pass
 
+def get_curr_screen_geometry():
+    """
+    Workaround to get the size of the current screen in a multi-screen setup.
+
+    Returns:
+        geometry (str): The standard Tk geometry string.
+            [width]x[height]+[left]+[top]
+    """
+    root = tk.Tk()
+    root.update_idletasks()
+    root.attributes('-fullscreen', True)
+    root.state('iconic')
+    #geometry = root.winfo_geometry()
+    geometry_x = root.winfo_width()
+    geometry_y = root.winfo_height()
+    #geometry_sx = root.winfo_screenwidth()
+    #geometry_sy = root.winfo_screenheight()
+    root.destroy()
+    return geometry_x, geometry_y
+
 image_contrast_float = 1.0
 filter_pre_enhance = True
 remove_white = False
 window_alpha = 0.5
+
+screenwidth, screenheight = get_curr_screen_geometry()
+window_size = {"width": 422, "height": 400}
+window_pos = {
+    "posx": screenwidth - window_size["width"] - 20,
+    "posy": (screenheight - window_size["height"]) - 1000
+}
+window_geometry = "{0}x{1}+{2}+{3}".format(window_size["width"],
+                                           window_size["height"],
+                                           window_pos["posx"],
+                                           window_pos["posy"])
 
 
 def prepareImage(filepath, contrast_float):
@@ -36,7 +67,7 @@ def prepareImage(filepath, contrast_float):
 
 def showLoadSaveDialog():
     window = tk.Tk()
-    window.geometry("750x250+10+100")
+    window.geometry(window_geometry)
     window.attributes("-topmost", "true")
     file_path_load = StringVar()
     file_path_load.set("-")
@@ -63,7 +94,7 @@ def showLoadSaveDialog():
     ipadding = {'ipadx': 10, 'ipady': 10, "padx": 0, "pady": 0}
     tk.Label(
         window,
-        text="Falls erste Messung eines Artefaktes: Screenshot aufnehmen!",
+        text="Falls erste Messung eines Artefaktes:\nScreenshot aufnehmen!",
         anchor=tk.W,
         bg="white").pack(**ipadding,
                          fill=tk.X)
@@ -79,6 +110,10 @@ def showLoadSaveDialog():
     tk.Button(window,
               text='Screenshot aufnehmen!',
               command=filedialogsave).pack(**ipadding,
+                                           fill=tk.X)
+    tk.Button(window,
+              text='Abbruch',
+              command=window.destroy).pack(**ipadding,
                                            fill=tk.X)
     window.mainloop()
     return (file_path_load.get(), file_path_save.get())
