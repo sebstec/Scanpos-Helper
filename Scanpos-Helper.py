@@ -91,6 +91,10 @@ def showLoadSaveDialog():
         else:
             window.attributes("-alpha", 1)
 
+    def end():
+        window.destroy()
+        exit()
+
     ipadding = {'ipadx': 10, 'ipady': 10, "padx": 0, "pady": 0}
     tk.Label(
         window,
@@ -112,8 +116,8 @@ def showLoadSaveDialog():
               command=filedialogsave).pack(**ipadding,
                                            fill=tk.X)
     tk.Button(window,
-              text='Abbruch',
-              command=window.destroy).pack(**ipadding,
+              text='Ende',
+              command=end).pack(**ipadding,
                                            fill=tk.X)
     window.mainloop()
     return (file_path_load.get(), file_path_save.get())
@@ -195,5 +199,7 @@ def makeOverlayWindow(filepath):
 
 
 filepaths = showLoadSaveDialog()
-if (filepaths[0] and len(filepaths[0]) > 1):
-    makeOverlayWindow(filepaths[0])
+while(True):
+    if (filepaths[0] and len(filepaths[0]) > 1):
+        makeOverlayWindow(filepaths[0])
+    showLoadSaveDialog()
