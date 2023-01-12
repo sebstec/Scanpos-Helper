@@ -10,6 +10,7 @@ try:  # Windows 8.1 and later
 except Exception as e:
     pass
 
+
 def get_curr_screen_geometry():
     """
     Workaround to get the size of the current screen in a multi-screen setup.
@@ -29,6 +30,7 @@ def get_curr_screen_geometry():
     #geometry_sy = root.winfo_screenheight()
     root.destroy()
     return geometry_x, geometry_y
+
 
 image_contrast_float = 1.0
 filter_pre_enhance = True
@@ -115,10 +117,7 @@ def showLoadSaveDialog():
               text='Screenshot aufnehmen!',
               command=filedialogsave).pack(**ipadding,
                                            fill=tk.X)
-    tk.Button(window,
-              text='Ende',
-              command=end).pack(**ipadding,
-                                           fill=tk.X)
+    tk.Button(window, text='Ende', command=end).pack(**ipadding, fill=tk.X)
     window.mainloop()
     return (file_path_load.get(), file_path_save.get())
 
@@ -199,7 +198,7 @@ def makeOverlayWindow(filepath):
 
 
 filepaths = showLoadSaveDialog()
-while(True):
+while (True):
     if (filepaths[0] and len(filepaths[0]) > 1):
         makeOverlayWindow(filepaths[0])
     showLoadSaveDialog()
